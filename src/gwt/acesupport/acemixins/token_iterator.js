@@ -57,6 +57,10 @@ var Range = require("ace/range").Range;
       return $complements[string];
    }
 
+   this.moveToNextToken = function()
+   {
+   };
+
    this.moveToStartOfRow = function()
    {
       this.$tokenIndex = 0;
@@ -149,15 +153,6 @@ var Range = require("ace/range").Range;
             this[key] = tokenIterator[key];
    };
 
-   function $peek(cursor, offset, mover)
-   {
-      var clone = cursor.clone();
-      var token;
-      for (var i = 0; i < offset; i++)
-         token = mover.call(clone, offset);
-      return token;
-   }
-
    /**
     * Get the token lying `offset` tokens ahead of
     * the token iterator. Returns `null` if no such
@@ -165,7 +160,11 @@ var Range = require("ace/range").Range;
     */
    this.peekFwd = function(offset)
    {
-      return $peek(this, offset, this.stepForward);
+      var clone = this.clone();
+      var token = null;
+      for (var i = 0; i < offset; i++)
+         token = clone.stepForward();
+      return token;
    };
 
    /**
@@ -175,7 +174,11 @@ var Range = require("ace/range").Range;
     */
    this.peekBwd = function(offset)
    {
-       return $peek(this, offset, this.stepBackward);
+      var clone = this.clone();
+      var token = null;
+      for (var i = 0; i < offset; i++)
+         token = clone.stepBackward();
+      return token;
    };
 
    /**
